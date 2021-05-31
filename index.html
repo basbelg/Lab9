@@ -24,6 +24,15 @@
       width: 240px;
     }
   </style>
+
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "6cf3638c493f4424b56aa8ec0a3a64ce"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
+                        
 </head>
 <body>
   <fieldset>
@@ -56,17 +65,91 @@
   </section>
 
   <script>
+    class CustomError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CustomError';
+      }
+    }
+
+    function errorTest() {
+      throw new CustomError('Custom Error and Throw test');
+    }
+
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      console.log('Global Error');
+
+      return false;
+    }
+
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch (err) {
+        alert('Please enter a number for both operands.');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // TODO - Make buttons functional
+    errorBtns[0].addEventListener('click', () => {
+      console.log('log');
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      console.error('error');
+    });
+
+    errorBtns[2].addEventListener('click', () => {
+      console.dir(document.head);
+    });
+
+    errorBtns[3].addEventListener('click', () => {
+      console.dirxml(document);
+    });
+
+    const label = 'Group Label';
+    errorBtns[4].addEventListener('click', () => {
+      console.group(label);
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      console.groupEnd(label);
+    });
+
+    errorBtns[6].addEventListener('click', () => {
+      console.table(errorBtns);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      console.time();
+    });
+
+    errorBtns[8].addEventListener('click', () => {
+      console.timeEnd();
+    });
+
+    errorBtns[9].addEventListener('click', () => {
+      console.trace();
+    });
+
+    errorBtns[10].addEventListener('click', () => {
+      boom;
+    });
+
+    try {
+      errorTest();
+    }
+    catch (err) {
+      alert(err.message);
+      alert(err.name);
+    }
   </script>
 </body>
 </html>
